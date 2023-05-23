@@ -21,15 +21,71 @@ public class Main {
         System.out.println();
     }
 
+    /******************************************************************
+     METHOD 1 - LOOP
+     ******************************************************************/
+    public static void pascal_loop(int lines) {
+        // number of lines
+        for (int row = 0; row < lines; row++) {
 
-    // METHOD 3 - MEMOIZATION AND RECURSIVE
-    public static void pascal_memoization(int line){
-        for(int i=0; i<line; i++){                   // number of lines
-            for(int s=1; s<line-i; s++){             // number of spaces
+            // number of spaces
+            for (int space = 1; space < lines - row; space++) {
                 System.out.print(" ");
             }
-            for(int j=0; j<=i;j++){
-                System.out.print(pascal_memo(i, j) + " ");
+
+//            reset number to 1
+            int number = 1;
+
+            for (int column = 0; column <= row; column++) {
+                System.out.print(number + " ");
+                // Binomial Expansion
+                number = number * (row - column) / (column + 1);
+            }
+            System.out.println();
+        }
+    }
+
+    /******************************************************************
+     METHOD 2 - RECURSIVE
+     ******************************************************************/
+    public static void pascal_recursive(int lines){
+        // number of lines
+        for(int row=0; row<lines; row++){
+            // number of spaces
+            for(int space=1; space<lines-row; space++){
+                System.out.print(" ");
+            }
+            for(int column=0; column<=row; column++){
+                System.out.print(pascal_rec(row, column) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static int pascal_rec(int row, int column){
+        if(column==0 || column == row){
+            return 1;
+        }
+
+        // (previous row and current_column-1) + (previous row and current_column)
+        return pascal_rec(row-1, column-1) + pascal_rec (row-1, column);
+    }
+
+
+  /******************************************************************
+     METHOD 3 - MEMOIZATION AND RECURSIVE
+  ******************************************************************/
+    public static void pascal_memoization(int lines){
+        // number of lines
+        for(int row=0; row<lines; row++){
+
+            // number of spaces
+            for(int space=1; space<lines-row; space++){
+                System.out.print(" ");
+            }
+
+            for(int column=0; column<=row; column++){
+                System.out.print(pascal_memo(row, column) + " ");
             }
             System.out.println();
         }
@@ -42,64 +98,18 @@ public class Main {
         if(column==0 || column == row){
             return 1;
         }
+
+        // Get from Cache - memoization
         if(cache.containsKey(key)){
             return cache.get(key);
         }
+
         // (previous row and current_column-1) + (previous row and current_column)
         result = pascal_memo(row-1, column-1) + pascal_memo (row-1, column);
+
+        // Store in Cache - memoization
         cache.put(key, result);
 
         return result;
-    }
-
-
-    // METHOD 2 - RECURSIVE
-    public static void pascal_recursive(int line){
-        // number of lines
-        for(int i=0; i<line; i++){
-
-            // number of spaces
-            for(int s=1; s<line-i; s++){
-                System.out.print(" ");
-            }
-            for(int j=0; j<=i;j++){
-                System.out.print(pascal_rec(i, j) + " ");
-            }
-            System.out.println();
-        }
-    }
-
-    public static int pascal_rec(int i, int j){
-
-        int result = 0;
-        int num=0;
-        if(j==0 || j == i){
-            return 1;
-        }
-
-        // (previous row and current_column-1) + (previous row and current_column)
-        return pascal_rec(i-1, j-1) + pascal_rec (i-1, j);
-    }
-
-
-    // METHOD 1 - LOOP
-    public static void pascal_loop(int lines) {
-        // number of lines
-        for (int i = 0; i < lines; i++) {
-
-            // number of spaces
-            for (int s = 1; s < lines - i; s++) {
-                System.out.print(" ");
-            }
-
-//            reset number to 1
-            int number = 1;
-
-            for (int j = 0; j <= i; j++) {
-                System.out.print(number + " ");
-                number = number * (i - j) / (j + 1);
-            }
-            System.out.println();
-        }
     }
 }
